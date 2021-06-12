@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -6,22 +8,42 @@ using static System.Int32;
 
 namespace Expressions
 {
-    public class UnitTest1
+    public class ExpressionsTestData : IEnumerable<object[]>
     {
-        [Fact]
-        public void CanParseADigit()
+        public IEnumerator<object[]> GetEnumerator()
         {
-            var result = IExpr.Of("5");
-
-            Assert.Equal(new IntDigit(5).Evaluate(), result.Evaluate());
+            yield return new object[] { new IntDigit(5), 5.0 };
+            yield return new object[] { new Plus(new IntDigit(5), new IntDigit(1)), 6.0 };
+            yield return new object[] { new Minus(new IntDigit(5), new IntDigit(1)), 4.0 };
+            yield return new object[] { new Plus(new IntDigit(5), new Plus(new IntDigit(1), new IntDigit(2))), 8.0 };
         }
 
-        [Fact]
-        public void CanParseASum()
-        {
-            var result = IExpr.Of("5+1");
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
 
-            Assert.Equal(new Plus(new IntDigit(5), new IntDigit(1)).Evaluate(), result.Evaluate());
+    public class UnitTest1
+    {
+        [Theory]
+        [ClassData(typeof(ExpressionsTestData))]
+        public void CanEvaluateAnExpression(IExpr expression, double result)
+        {
+            Assert.Equal(expression.Evaluate(), result);
+        }
+
+        [Theory]
+        [InlineData("5", 5.0)]
+        [InlineData("5+1", 6.0)]
+        [InlineData("5 + 1", 6.0)]
+        [InlineData("11+1", 12.0)]
+        [InlineData("1+12", 13.0)]
+        [InlineData("234+1", 235.0)]
+        [InlineData("234+10", 244.0)]
+        [InlineData("1+110", 111)]
+        [InlineData("110-1", 109)]
+        [InlineData("110-10", 100)]
+        public void CanParseAnExpression(string expression, double expectedResult)
+        {
+            Assert.Equal(expectedResult, IExpr.Of(expression).Evaluate());
         }
     }
 
@@ -36,15 +58,25 @@ namespace Expressions
             _second = second;
         }
 
-        public double Evaluate()
+        public double Evaluate() => _first.Evaluate() + _second.Evaluate();
+
+        public IExpr And(IntDigit expr) => new Plus(_first, _second.And(expr));
+    }
+
+    public class Minus: IExpr
+    {
+        private readonly IExpr _first;
+        private readonly IExpr _second;
+
+        public Minus(IExpr first, IExpr second)
         {
-            return _first.Evaluate() + _second.Evaluate();
+            _first = first;
+            _second = second;
         }
 
-        public IExpr And(IntDigit expr)
-        {
-            throw new System.NotImplementedException();
-        }
+        public double Evaluate() => _first.Evaluate() - _second.Evaluate();
+
+        public IExpr And(IntDigit expr) => new Minus(_first, _second.And(expr));
     }
 
     public class IntDigit : IExpr
@@ -56,10 +88,15 @@ namespace Expressions
             _value = value;
         }
 
+        public IntDigit(double value)
+        {
+            _value = (int) value;
+        }
+
         public double Evaluate() => _value;
         public IExpr And(IntDigit expr)
         {
-            return expr;
+            return new IntDigit(_value * 10 + expr._value);
         }
     }
 
@@ -69,6 +106,7 @@ namespace Expressions
             input.Aggregate(new EmptyExpression() as IExpr, (expression, c) =>
             {
                 if (char.IsDigit(c)) return expression.And(new IntDigit(Parse(c.ToString())));
+                if (char.IsWhiteSpace(c)) return expression;
                 return new Operator(c, expression);
             });
 
@@ -94,7 +132,15 @@ namespace Expressions
 
         public IExpr And(IntDigit expr)
         {
-            return new Plus(_expression, expr);
+            switch (_c)
+            {
+                case '+':
+                    return new Plus(_expression, expr);
+                case '-':
+                    return new Minus(_expression, expr);
+
+            }
+            throw new Exception("booom");
         }
     }
 
