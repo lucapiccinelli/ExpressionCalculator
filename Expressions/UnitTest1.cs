@@ -15,6 +15,7 @@ namespace Expressions
             yield return new object[] { new IntDigit(5), 5.0 };
             yield return new object[] { new Plus(new IntDigit(5), new IntDigit(1)), 6.0 };
             yield return new object[] { new Minus(new IntDigit(5), new IntDigit(1)), 4.0 };
+            yield return new object[] { new By(new IntDigit(2), new IntDigit(3)), 6.0 };
             yield return new object[] { new Plus(new IntDigit(5), new Plus(new IntDigit(1), new IntDigit(2))), 8.0 };
         }
 
@@ -45,9 +46,33 @@ namespace Expressions
         [InlineData("1+2-3", 0)]
         [InlineData("1-2+3", 2)]
         [InlineData("1-2+30 - 2", 27)]
+        [InlineData("1-2+30 - 20", 9)]
+        [InlineData("2*3", 6)]
+        [InlineData("2*3+1", 7)]
+        [InlineData("2*30+1", 61)]
+        [InlineData("1+2*3", 7)]
         public void CanParseAnExpression(string expression, double expectedResult)
         {
             Assert.Equal(expectedResult, IExpr.Of(expression).Evaluate());
+        }
+    }
+
+    public class By: IExpr
+    {
+        private readonly IExpr _first;
+        private readonly IExpr _second;
+
+        public By(IExpr first, IExpr second)
+        {
+            _first = first;
+            _second = second;
+        }
+
+        public double Evaluate() => _first.Evaluate() * _second.Evaluate();
+
+        public IExpr And(IntDigit expr)
+        {
+            return new By(_first, _second.And(expr));
         }
     }
 
@@ -131,6 +156,7 @@ namespace Expressions
             {
                 '+' => new Plus(_expression, expr),
                 '-' => new Minus(_expression, expr),
+                '*' => new By(_expression, expr),
                 _ => _expression.And(expr)
             };
     }
