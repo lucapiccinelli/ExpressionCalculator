@@ -41,6 +41,10 @@ namespace Expressions
         [InlineData("1+110", 111)]
         [InlineData("110-1", 109)]
         [InlineData("110-10", 100)]
+        [InlineData("1+2+3", 6)]
+        [InlineData("1+2-3", 0)]
+        [InlineData("1-2+3", 2)]
+        [InlineData("1-2+30 - 2", 27)]
         public void CanParseAnExpression(string expression, double expectedResult)
         {
             Assert.Equal(expectedResult, IExpr.Of(expression).Evaluate());
@@ -88,11 +92,6 @@ namespace Expressions
             _value = value;
         }
 
-        public IntDigit(double value)
-        {
-            _value = (int) value;
-        }
-
         public double Evaluate() => _value;
         public IExpr And(IntDigit expr)
         {
@@ -125,32 +124,21 @@ namespace Expressions
             _expression = expression;
         }
 
-        public double Evaluate()
-        {
-            return 0;
-        }
+        public double Evaluate() => 0;
 
-        public IExpr And(IntDigit expr)
-        {
-            switch (_c)
+        public IExpr And(IntDigit expr) =>
+            _c switch
             {
-                case '+':
-                    return new Plus(_expression, expr);
-                case '-':
-                    return new Minus(_expression, expr);
-
-            }
-            throw new Exception("booom");
-        }
+                '+' => new Plus(_expression, expr),
+                '-' => new Minus(_expression, expr),
+                _ => _expression.And(expr)
+            };
     }
 
     public class EmptyExpression : IExpr
     {
         public double Evaluate() => 0;
 
-        public IExpr And(IntDigit expr)
-        {
-            return expr;
-        }
+        public IExpr And(IntDigit expr) => expr;
     }
 }
