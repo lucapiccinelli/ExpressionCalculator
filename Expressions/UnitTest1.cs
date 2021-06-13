@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
+using ConsoleApp1.Core;
 using Xunit;
-using static System.Int32;
 
 namespace Expressions
 {
@@ -24,11 +23,20 @@ namespace Expressions
 
     public class UnitTest1
     {
+        public static IEnumerable<object[]> ExpressionsData() => new List<object[]>
+        {
+            new object[] {new IntDigit(5), 5.0},
+            new object[] {new Plus(new IntDigit(5), new IntDigit(1)), 6.0},
+            new object[] {new Minus(new IntDigit(5), new IntDigit(1)), 4.0},
+            new object[] {new By(new IntDigit(2), new IntDigit(3)), 6.0},
+            new object[] {new Plus(new IntDigit(5), new Plus(new IntDigit(1), new IntDigit(2))), 8.0},
+        };
+
         [Theory]
-        [ClassData(typeof(ExpressionsTestData))]
+        [MemberData(nameof(ExpressionsData))]
         public void CanEvaluateAnExpression(IExpr expression, double result)
         {
-            Assert.Equal(expression.Evaluate(), result);
+            Assert.Equal(result, expression.Evaluate());
         }
 
         [Theory]
@@ -51,120 +59,13 @@ namespace Expressions
         [InlineData("2*3+1", 7)]
         [InlineData("2*30+1", 61)]
         [InlineData("1+2*3", 7)]
+        [InlineData("7-2*3", 1)]
+        [InlineData("70-2*30+4*2-10", 8)]
+        [InlineData("2*3-5", 1)]
+        [InlineData("2*2*2", 8)]
         public void CanParseAnExpression(string expression, double expectedResult)
         {
             Assert.Equal(expectedResult, IExpr.Of(expression).Evaluate());
         }
-    }
-
-    public class By: IExpr
-    {
-        private readonly IExpr _first;
-        private readonly IExpr _second;
-
-        public By(IExpr first, IExpr second)
-        {
-            _first = first;
-            _second = second;
-        }
-
-        public double Evaluate() => _first.Evaluate() * _second.Evaluate();
-
-        public IExpr And(IntDigit expr)
-        {
-            return new By(_first, _second.And(expr));
-        }
-    }
-
-    public class Plus: IExpr
-    {
-        private readonly IExpr _first;
-        private readonly IExpr _second;
-
-        public Plus(IExpr first, IExpr second)
-        {
-            _first = first;
-            _second = second;
-        }
-
-        public double Evaluate() => _first.Evaluate() + _second.Evaluate();
-
-        public IExpr And(IntDigit expr) => new Plus(_first, _second.And(expr));
-    }
-
-    public class Minus: IExpr
-    {
-        private readonly IExpr _first;
-        private readonly IExpr _second;
-
-        public Minus(IExpr first, IExpr second)
-        {
-            _first = first;
-            _second = second;
-        }
-
-        public double Evaluate() => _first.Evaluate() - _second.Evaluate();
-
-        public IExpr And(IntDigit expr) => new Minus(_first, _second.And(expr));
-    }
-
-    public class IntDigit : IExpr
-    {
-        private readonly int _value;
-
-        public IntDigit(int value)
-        {
-            _value = value;
-        }
-
-        public double Evaluate() => _value;
-        public IExpr And(IntDigit expr)
-        {
-            return new IntDigit(_value * 10 + expr._value);
-        }
-    }
-
-    public interface IExpr
-    {
-        public static IExpr Of(string input) =>
-            input.Aggregate(new EmptyExpression() as IExpr, (expression, c) =>
-            {
-                if (char.IsDigit(c)) return expression.And(new IntDigit(Parse(c.ToString())));
-                if (char.IsWhiteSpace(c)) return expression;
-                return new Operator(c, expression);
-            });
-
-        double Evaluate();
-        public IExpr And(IntDigit expr);
-    }
-
-    public class Operator : IExpr
-    {
-        private readonly char _c;
-        private readonly IExpr _expression;
-
-        public Operator(in char c, IExpr expression)
-        {
-            _c = c;
-            _expression = expression;
-        }
-
-        public double Evaluate() => 0;
-
-        public IExpr And(IntDigit expr) =>
-            _c switch
-            {
-                '+' => new Plus(_expression, expr),
-                '-' => new Minus(_expression, expr),
-                '*' => new By(_expression, expr),
-                _ => _expression.And(expr)
-            };
-    }
-
-    public class EmptyExpression : IExpr
-    {
-        public double Evaluate() => 0;
-
-        public IExpr And(IntDigit expr) => expr;
     }
 }
