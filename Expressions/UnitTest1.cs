@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using ConsoleApp1.Core;
 using Xunit;
+using Expression = ConsoleApp1.Core.Expression;
 
 namespace Expressions
 {
@@ -65,7 +66,7 @@ namespace Expressions
         [InlineData("2*2*2", 8)]
         public void CanParseAnExpression(string expression, double expectedResult)
         {
-            Assert.Equal(expectedResult, IExpr.Of(expression).Evaluate());
+            Assert.Equal(expectedResult, Expression.Of(expression).Evaluate());
         }
     }
 }

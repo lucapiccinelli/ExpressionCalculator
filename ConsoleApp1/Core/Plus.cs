@@ -1,3 +1,5 @@
+using System;
+
 namespace ConsoleApp1.Core
 {
     public class Plus: IExpr
@@ -15,5 +17,23 @@ namespace ConsoleApp1.Core
 
         public IExpr And(IntDigit expr) => new Plus(_first, _second.And(expr));
         public IExpr CreateBy(IntDigit expr) => new Plus(_first, new By(_second, expr));
+
+        protected bool Equals(Plus other)
+        {
+            return Equals(_first, other._first) && Equals(_second, other._second);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Plus) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_first, _second);
+        }
     }
 }

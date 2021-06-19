@@ -16,5 +16,23 @@ namespace ConsoleApp1.Core
         }
 
         public IExpr CreateBy(IntDigit expr) => new By(this, expr);
+
+        protected bool Equals(IntDigit other)
+        {
+            return _value == other._value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((IntDigit) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return _value;
+        }
     }
 }
