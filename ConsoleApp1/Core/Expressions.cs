@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace ConsoleApp1.Core
 {
@@ -29,19 +30,17 @@ namespace ConsoleApp1.Core
             return (_expressions != null ? _expressions.GetHashCode() : 0);
         }
 
-        public override string ToString()
-        {
-            return _expressions.Aggregate("", (acc, expr ) => $"{acc}, {expr}");
-        }
+        public override string ToString() => _expressions.Aggregate("", (acc, expr ) => $"{acc}, {expr}");
 
         public double Sum() =>
-            _expressions
-                .Aggregate(Expression.Empty, (acc, expr) => new Plus(acc, expr))
-                .Evaluate();
+            Reduce((acc, expr) => new Plus(acc, expr));
 
         public double Multiply() =>
+            Reduce((acc, expr) => acc.CreateBy(expr));
+
+        private double Reduce(Func<IExpr, IExpr, IExpr> reducer) =>
             _expressions
-                .Aggregate(Expression.Empty, (acc, expr) => acc.CreateBy(expr))
+                .Aggregate(Expression.Empty, reducer)
                 .Evaluate();
     }
 }
