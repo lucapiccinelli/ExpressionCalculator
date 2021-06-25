@@ -14,7 +14,11 @@ namespace ConsoleApp1.Core
 
         public IExpr ToExpression() => this;
 
-        public IExpr CreateBy(IExpr expr) => new By(this, expr);
+        public IExpr Multiply(IExpr expr) => new By(this, expr);
+        public IExpr Add(IExpr expr) => new Plus(this, expr);
+
+        public IExpr Subtract(IExpr expr) => new Minus(this, expr);
+
         public IExpr ExpandDigit(IntDigit expr) => new IntDigit(_value * 10 + expr._value);
 
         protected bool Equals(IntDigit other)

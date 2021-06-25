@@ -6,7 +6,9 @@ namespace ConsoleApp1.Core
     public interface IExpr: IMonoid
     {
         double Evaluate();
-        IExpr CreateBy(IExpr expr);
+        IExpr Multiply(IExpr expr);
+        IExpr Add(IExpr expr);
+        IExpr Subtract(IExpr expr);
 
         public IExpr ExpandDigit(IntDigit expr);
     }

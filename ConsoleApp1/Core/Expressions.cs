@@ -36,7 +36,7 @@ namespace ConsoleApp1.Core
             Reduce((acc, expr) => new Plus(acc, expr));
 
         public double Multiply() =>
-            Reduce((acc, expr) => acc.CreateBy(expr));
+            Reduce((acc, expr) => acc.Multiply(expr));
 
         private double Reduce(Func<IExpr, IExpr, IExpr> reducer) =>
             _expressions

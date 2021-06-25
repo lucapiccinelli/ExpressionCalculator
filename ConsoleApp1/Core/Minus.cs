@@ -16,12 +16,14 @@ namespace ConsoleApp1.Core
         public double Evaluate() => _first.Evaluate() - _second.Evaluate();
 
         public IMonoid And(IntDigit expr) => ExpandDigit(expr);
+        public IExpr Subtract(IExpr expr) => new Minus(this, expr);
+
         public IExpr ExpandDigit(IntDigit expr) => new Minus(_first, _second.ExpandDigit(expr));
 
         public IExpr ToExpression() => this;
 
-        public IExpr CreateBy(IExpr expr) => new Minus(_first, new By(_second, expr));
-
+        public IExpr Multiply(IExpr expr) => new Minus(_first, new By(_second, expr));
+        public IExpr Add(IExpr expr) => new Plus(this, expr);
         protected bool Equals(Minus other)
         {
             return Equals(_first, other._first) && Equals(_second, other._second);

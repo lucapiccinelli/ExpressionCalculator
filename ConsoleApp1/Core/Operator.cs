@@ -16,9 +16,9 @@ namespace ConsoleApp1.Core
         public IMonoid And(IntDigit expr) =>
             _c switch
             {
-                '+' => new Plus(_expression, expr),
-                '-' => new Minus(_expression, expr),
-                '*' => _expression.CreateBy(expr),
+                '+' => _expression.Add(expr),
+                '-' => _expression.Subtract(expr),
+                '*' => _expression.Multiply(expr),
                 _ => _expression.And(expr)
             };
 

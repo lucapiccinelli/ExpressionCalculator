@@ -17,9 +17,12 @@ namespace ConsoleApp1.Core
 
         public IMonoid And(IntDigit expr) => ExpandDigit(expr);
         public IExpr ToExpression() => this;
+        public IExpr Subtract(IExpr expr) => new Minus(this, expr);
+
         public IExpr ExpandDigit(IntDigit expr) => new By(_first, _second.ExpandDigit(expr));
 
-        public IExpr CreateBy(IExpr expr) => new By(this, expr);
+        public IExpr Multiply(IExpr expr) => new By(this, expr);
+        public IExpr Add(IExpr expr) => new Plus(this, expr);
 
         protected bool Equals(By other)
         {
