@@ -1,6 +1,8 @@
+using System.Data;
+
 namespace ConsoleApp1.Core
 {
-    public class Operator : IExpr
+    public class Operator : IMonoid
     {
         private readonly char _c;
         private readonly IExpr _expression;
@@ -11,9 +13,7 @@ namespace ConsoleApp1.Core
             _expression = expression;
         }
 
-        public double Evaluate() => 0;
-
-        public IExpr And(IntDigit expr) =>
+        public IMonoid And(IntDigit expr) =>
             _c switch
             {
                 '+' => new Plus(_expression, expr),
@@ -22,9 +22,9 @@ namespace ConsoleApp1.Core
                 _ => _expression.And(expr)
             };
 
-        public IExpr CreateBy(IntDigit expr)
+        public IExpr ToExpression()
         {
-            throw new System.NotImplementedException();
+            throw new InvalidExpressionException();
         }
     }
 }

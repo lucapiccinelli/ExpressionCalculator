@@ -4,7 +4,10 @@ namespace ConsoleApp1.Core
     {
         public double Evaluate() => 0;
 
-        public IExpr And(IntDigit expr) => expr;
+        public IMonoid And(IntDigit expr) => ExpandDigit(expr);
+        public IExpr ToExpression() => this;
+
         public IExpr CreateBy(IntDigit expr) => new By(new IntDigit(1), expr);
+        public IExpr ExpandDigit(IntDigit expr) => expr;
     }
 }

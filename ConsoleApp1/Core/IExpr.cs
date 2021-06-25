@@ -3,10 +3,11 @@ using System.Linq;
 
 namespace ConsoleApp1.Core
 {
-    public interface IExpr
+    public interface IExpr: IMonoid
     {
         double Evaluate();
-        public IExpr And(IntDigit expr);
         IExpr CreateBy(IntDigit expr);
+
+        public IExpr ExpandDigit(IntDigit expr);
     }
 }

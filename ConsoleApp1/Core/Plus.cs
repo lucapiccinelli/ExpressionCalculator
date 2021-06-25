@@ -15,7 +15,9 @@ namespace ConsoleApp1.Core
 
         public double Evaluate() => _first.Evaluate() + _second.Evaluate();
 
-        public IExpr And(IntDigit expr) => new Plus(_first, _second.And(expr));
+        public IMonoid And(IntDigit expr) => ExpandDigit(expr);
+        public IExpr ToExpression() => this;
+        public IExpr ExpandDigit(IntDigit expr) => new Plus(_first, _second.ExpandDigit(expr));
         public IExpr CreateBy(IntDigit expr) => new Plus(_first, new By(_second, expr));
 
         protected bool Equals(Plus other)

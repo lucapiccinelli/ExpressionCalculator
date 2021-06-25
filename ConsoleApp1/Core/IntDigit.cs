@@ -10,12 +10,12 @@ namespace ConsoleApp1.Core
         }
 
         public double Evaluate() => _value;
-        public IExpr And(IntDigit expr)
-        {
-            return new IntDigit(_value * 10 + expr._value);
-        }
+        public IMonoid And(IntDigit expr) => ExpandDigit(expr);
+
+        public IExpr ToExpression() => this;
 
         public IExpr CreateBy(IntDigit expr) => new By(this, expr);
+        public IExpr ExpandDigit(IntDigit expr) => new IntDigit(_value * 10 + expr._value);
 
         protected bool Equals(IntDigit other)
         {
