@@ -38,5 +38,10 @@ namespace ConsoleApp1.Core
             _expressions
                 .Aggregate(new EmptyExpression() as IExpr, (acc, expr) => new Plus(acc, expr))
                 .Evaluate();
+
+        public double Multiply() =>
+            _expressions
+                .Aggregate(new EmptyExpression() as IExpr, (acc, expr) => acc.CreateBy(expr))
+                .Evaluate();
     }
 }

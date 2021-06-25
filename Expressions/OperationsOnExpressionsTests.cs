@@ -18,5 +18,12 @@ namespace Expressions
             Assert.Equal(23, expr.Sum());
         }
 
+        [Fact]
+        public void CanMultiplyExpressions()
+        {
+            var expr = Expression.FromFile(_fixture.Filename);
+            Assert.Equal(130, expr.Multiply());
+        }
+
     }
 }

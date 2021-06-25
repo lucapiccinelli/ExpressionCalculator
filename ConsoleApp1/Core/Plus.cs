@@ -18,7 +18,7 @@ namespace ConsoleApp1.Core
         public IMonoid And(IntDigit expr) => ExpandDigit(expr);
         public IExpr ToExpression() => this;
         public IExpr ExpandDigit(IntDigit expr) => new Plus(_first, _second.ExpandDigit(expr));
-        public IExpr CreateBy(IntDigit expr) => new Plus(_first, new By(_second, expr));
+        public IExpr CreateBy(IExpr expr) => new Plus(_first, new By(_second, expr));
 
         protected bool Equals(Plus other)
         {

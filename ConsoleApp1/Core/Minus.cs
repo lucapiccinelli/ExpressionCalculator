@@ -20,7 +20,7 @@ namespace ConsoleApp1.Core
 
         public IExpr ToExpression() => this;
 
-        public IExpr CreateBy(IntDigit expr) => new Minus(_first, new By(_second, expr));
+        public IExpr CreateBy(IExpr expr) => new Minus(_first, new By(_second, expr));
 
         protected bool Equals(Minus other)
         {

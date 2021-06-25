@@ -19,7 +19,7 @@ namespace ConsoleApp1.Core
         public IExpr ToExpression() => this;
         public IExpr ExpandDigit(IntDigit expr) => new By(_first, _second.ExpandDigit(expr));
 
-        public IExpr CreateBy(IntDigit expr) => new By(this, expr);
+        public IExpr CreateBy(IExpr expr) => new By(this, expr);
 
         protected bool Equals(By other)
         {
