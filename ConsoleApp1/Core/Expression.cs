@@ -7,7 +7,7 @@ namespace ConsoleApp1.Core
     public static class Expression
     {
         public static IExpr Of(string input) =>
-            input.Aggregate(new EmptyExpression() as IMonoid, (monoid, c) =>
+            input.Aggregate(EmptyMonoid, (monoid, c) =>
             {
                 if (char.IsDigit(c)) return monoid.And(new IntDigit(int.Parse(c.ToString())));
                 if (char.IsWhiteSpace(c)) return monoid;
@@ -23,5 +23,8 @@ namespace ConsoleApp1.Core
 
             return new Expressions(expressions);
         }
+
+        public static IExpr Empty => new EmptyExpression();
+        public static IMonoid EmptyMonoid => Empty;
     }
 }
