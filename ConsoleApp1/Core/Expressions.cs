@@ -33,5 +33,10 @@ namespace ConsoleApp1.Core
         {
             return _expressions.Aggregate("", (acc, expr ) => $"{acc}, {expr}");
         }
+
+        public double Sum() =>
+            _expressions
+                .Aggregate(new EmptyExpression() as IExpr, (acc, expr) => new Plus(acc, expr))
+                .Evaluate();
     }
 }
