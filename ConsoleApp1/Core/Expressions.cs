@@ -33,7 +33,7 @@ namespace ConsoleApp1.Core
         public override string ToString() => _expressions.Aggregate("", (acc, expr ) => $"{acc}, {expr}");
 
         public double Sum() =>
-            Reduce((acc, expr) => new Plus(acc, expr));
+            Reduce((acc, expr) => acc.Add(expr));
 
         public double Multiply() =>
             Reduce((acc, expr) => acc.Multiply(expr));

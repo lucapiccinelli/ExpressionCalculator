@@ -1,8 +1,10 @@
+using System;
+
 namespace ConsoleApp1.Core
 {
     public class EmptyExpression : IExpr
     {
-        public double Evaluate() => 0;
+        public double Evaluate() => throw new Exception("Empty Expression can't be evaluated");
 
         public IMonoid And(IntDigit expr) => ExpandDigit(expr);
         public IExpr ToExpression() => this;
