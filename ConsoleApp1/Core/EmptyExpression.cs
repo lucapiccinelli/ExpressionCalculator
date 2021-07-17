@@ -1,13 +1,14 @@
 using System;
+using ConsoleApp1.Exceptions;
 
 namespace ConsoleApp1.Core
 {
     public class EmptyExpression : IExpr
     {
-        public double Evaluate() => throw new Exception("Empty Expression can't be evaluated");
+        public double Evaluate() => throw new InvalidExpressionException("Empty Expression can't be evaluated");
 
         public IMonoid And(IntDigit expr) => ExpandDigit(expr);
-        public IExpr ToExpression() => this;
+        public IExpr ToExpression() => throw new InvalidExpressionException("An Expression can' be empty");
 
         public IExpr Multiply(IExpr expr) => new By(new IntDigit(1), expr);
         public IExpr Add(IExpr expr) => new Plus(new IntDigit(0), expr);

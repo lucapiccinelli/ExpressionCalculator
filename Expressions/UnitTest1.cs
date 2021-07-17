@@ -1,8 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using ConsoleApp1.Core;
+using ConsoleApp1.Exceptions;
 using Xunit;
 using Expression = ConsoleApp1.Core.Expression;
 
@@ -67,6 +67,16 @@ namespace Expressions
         public void CanParseAnExpression(string expression, double expectedResult)
         {
             Assert.Equal(expectedResult, Expression.Of(expression).Evaluate());
+        }
+
+        [Theory]
+        [InlineData("1+")]
+        [InlineData("")]
+        [InlineData("+1")]
+        [InlineData("1++")]
+        public void AnExpression_ThatIsNot_FormallyCorrect_ShouldThrow(string expressionString)
+        {
+            Assert.Throws<InvalidExpressionException>(() => Expression.Of(expressionString));
         }
     }
 }

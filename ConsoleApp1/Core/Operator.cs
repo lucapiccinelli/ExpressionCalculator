@@ -1,4 +1,5 @@
-using System.Data;
+
+using ConsoleApp1.Exceptions;
 
 namespace ConsoleApp1.Core
 {
@@ -24,7 +25,7 @@ namespace ConsoleApp1.Core
 
         public IExpr ToExpression()
         {
-            throw new InvalidExpressionException();
+            throw new InvalidExpressionException("An expression must not end with an operator");
         }
     }
 }
