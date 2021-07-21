@@ -1,8 +1,7 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ConsoleApp1.Core
+namespace Expressions.Core
 {
     public static class Expression
     {

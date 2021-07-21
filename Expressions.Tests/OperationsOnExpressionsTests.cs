@@ -1,7 +1,7 @@
-﻿using ConsoleApp1.Core;
+﻿using Expressions.Core;
 using Xunit;
 
-namespace Expressions
+namespace Expressions.Tests
 {
     public class OperationsOnExpressionsTests: IClassFixture<WithFileFixture> {
         private readonly WithFileFixture _fixture;

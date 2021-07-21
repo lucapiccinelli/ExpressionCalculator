@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using ConsoleApp1.Core;
-using ConsoleApp1.Exceptions;
+using Expressions.Core;
+using Expressions.Exceptions;
 using Xunit;
-using Expression = ConsoleApp1.Core.Expression;
 
-namespace Expressions
+namespace Expressions.Tests
 {
     public class ExpressionsTestData : IEnumerable<object[]>
     {
@@ -22,7 +20,7 @@ namespace Expressions
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
-    public class UnitTest1
+    public class ExpressionTests
     {
         public static IEnumerable<object[]> ExpressionsData() => new List<object[]>
         {

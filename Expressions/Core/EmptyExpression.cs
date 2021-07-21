@@ -1,7 +1,6 @@
-using System;
-using ConsoleApp1.Exceptions;
+using Expressions.Exceptions;
 
-namespace ConsoleApp1.Core
+namespace Expressions.Core
 {
     public class EmptyExpression : IExpr
     {

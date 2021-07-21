@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using System.Text;
-using ConsoleApp1.Core;
+﻿using Expressions.Core;
 using Xunit;
 
-namespace Expressions
+namespace Expressions.Tests
 {
     public class FromFileTests: IClassFixture<WithFileFixture>
     {
@@ -20,7 +18,7 @@ namespace Expressions
         public void CanReadExpressions_FromFile()
         {
             var expr = Expression.FromFile(_filename);
-            var expected = new ConsoleApp1.Core.Expressions(
+            var expected = new Core.Expressions(
                 Expression.Of(_fixture.FirstExpression), 
                 Expression.Of(_fixture.SecondExpression));
             Assert.Equal(expected, expr);

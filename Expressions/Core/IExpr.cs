@@ -1,7 +1,4 @@
-using System;
-using System.Linq;
-
-namespace ConsoleApp1.Core
+namespace Expressions.Core
 {
     public interface IExpr: IMonoid
     {

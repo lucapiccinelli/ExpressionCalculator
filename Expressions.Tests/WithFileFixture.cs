@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Expressions
+namespace Expressions.Tests
 {
     public class WithFileFixture: IDisposable
     {

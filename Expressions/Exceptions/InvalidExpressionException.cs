@@ -1,6 +1,6 @@
 using System;
 
-namespace ConsoleApp1.Exceptions
+namespace Expressions.Exceptions
 {
     public class InvalidExpressionException : Exception
     {
